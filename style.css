@@ -360,39 +360,29 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
 }
 /* Tyylit tulostusta ja PDF-tallennusta varten */
 @media print {
-    /* Piilotetaan kaikki käyttöliittymän työkalut ja elementit */
-    header, 
-    #piano-input-container, 
-    .search-section, 
-    #audio-container, 
-    #hidden-paper,
-    #full-note-display,
-    button,
-    select {
-        display: none !important;
+    /* Piilotetaan kaikki sivun elementit */
+    body * {
+        visibility: hidden;
     }
 
-    /* Nollataan taustat ja marginaalit A4-sivua varten */
-    body, .app-container {
-        background: white !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
+    /* Tehdään vain nuottialue ja sen sisältämät SVG-elementit näkyviksi */
+    #paper, #paper * {
+        visibility: visible;
     }
 
-    /* Asetetaan nuottipaperi täyttämään sivu siististi */
+    /* Siirretään nuottipaperi sivun vasempaan yläkulmaan */
     #paper {
+        position: absolute;
+        left: 0;
+        top: 0;
         width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
-        display: block !important;
     }
 
-    /* Varmistetaan, että SVG-nuotit skaalautuvat oikein */
+    /* Varmistetaan SVG-nuottikuvan oikea skaalautuvuus */
     #paper svg {
         width: 100% !important;
-        height: auto !important;
+        display: block !important;
     }
 }
