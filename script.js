@@ -165,7 +165,7 @@ function processAbc() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    initApp();
+   processAbc();  
     
     const abcEditor = document.getElementById('searchQuery');
     const tempoRange = document.getElementById('tempoRange');
@@ -182,10 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Esikatselun päivitys
     if (abcEditor) {
         abcEditor.addEventListener('input', () => {
-            ABCJS.renderAbc("search-preview", "L:1/4\nM:none\n" + abcEditor.value, { 
-                responsive: 'resize', 
-                scale: 0.7 
-            });
+            processAbc(); 
         });
     }
 
@@ -249,20 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('active'));
             abcEditor.focus();
 
-            ABCJS.renderAbc("search-preview", "L:1/4\nM:none\n" + abcEditor.value, { 
-                responsive: 'resize', 
-                scale: 0.7 
-            });
+            processAbc(); 
         });
     });
 
-    // 7. Hae-nappi
-    const searchBtn = document.getElementById('search-btn');
-    if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-            handleSearch();
-        });
-    }
+
 
     // 8. Backspace-painike
     const backspaceBtn = document.getElementById('backspace-btn');
@@ -280,22 +268,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 abcEditor.selectionStart = abcEditor.selectionEnd = start;
             }
 
-            ABCJS.renderAbc("search-preview", "L:1/4\nM:none\n" + abcEditor.value, { 
-                responsive: 'resize', 
-                scale: 0.7 
-            });
+            processAbc(); 
             abcEditor.focus();
         });
     }
     
-    // 9. Tyhjennys
-    const clearBtn = document.getElementById('clearSearch');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-            abcEditor.value = "";
-            document.getElementById('results-list').innerHTML = "";
-            document.getElementById('match-count').innerText = "0";
-            ABCJS.renderAbc("search-preview", ""); 
-        });
-    }
+   // 9. Tyhjennys
+if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+        abcEditor.value = "";
+        processAbc(); // <-- Korvaa tässä olleet turhat rivit ja ABCJS.renderAbc
+    });
+}
+
 }); // Tämä sulkee DOMContentLoaded-funktion oikein
