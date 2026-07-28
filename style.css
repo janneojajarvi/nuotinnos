@@ -359,9 +359,10 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
     background: transparent;
 }
 /* Tyylit tulostusta ja PDF-tallennusta varten */
-/* Tyylit tulostusta ja PDF-tallennusta varten */
 @media print {
-    /* 1. Piilotetaan käyttöliittymän muut osiot */
+    /* 1. Piilotetaan kaikki napit, valikot ja käyttöliittymäosiot */
+    button,
+    select,
     header, 
     .search-section, 
     #audio-container, 
@@ -370,7 +371,7 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
         display: none !important;
     }
 
-    /* 2. Nollataan taustat ja marginaalit A4-sivua varten */
+    /* 2. Nollataan sivun taustat ja reunukset A4-arkkia varten */
     html, body, .app-container {
         background: #ffffff !important;
         margin: 0 !important;
@@ -381,7 +382,7 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
         border: none !important;
     }
 
-    /* 3. Varmistetaan että nuottipaperi täyttää sivun */
+    /* 3. Varmistetaan että nuottipaperi jää ainoana näkyviin */
     #paper {
         display: block !important;
         width: 100% !important;
@@ -389,11 +390,10 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
         padding: 0 !important;
     }
 
-    /* 4. Estetään SVG-nuottikuvan korkeuden romahdus */
+    /* 4. Asetetaan SVG-nuottikuva täyttämään paperi */
     #paper svg {
         display: block !important;
         width: 100% !important;
-        max-width: 100% !important;
-        overflow: visible !important;
+        height: auto !important;
     }
 }
