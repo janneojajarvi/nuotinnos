@@ -360,9 +360,7 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
 }
 /* Tyylit tulostusta ja PDF-tallennusta varten */
 @media print {
-    /* 1. Piilotetaan kaikki napit, valikot ja käyttöliittymäosiot */
-    button,
-    select,
+    /* 1. Piilotetaan käyttöliittymä, napit ja tekstikentät */
     header, 
     .search-section, 
     #audio-container, 
@@ -371,29 +369,35 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
         display: none !important;
     }
 
-    /* 2. Nollataan sivun taustat ja reunukset A4-arkkia varten */
-    html, body, .app-container {
+    /* 2. Nollataan sivun tausta ja reunat */
+    html, body {
         background: #ffffff !important;
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
-        max-width: 100% !important;
-        box-shadow: none !important;
-        border: none !important;
     }
 
-    /* 3. Varmistetaan että nuottipaperi jää ainoana näkyviin */
+    .app-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    /* 3. Nostetaan nuottipaperi A4-arkin ylälaitaan */
     #paper {
         display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
         width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
-    /* 4. Asetetaan SVG-nuottikuva täyttämään paperi */
+    /* 4. Pakotetaan SVG-nuottikuva näkyväksi */
     #paper svg {
         display: block !important;
         width: 100% !important;
-        height: auto !important;
     }
 }

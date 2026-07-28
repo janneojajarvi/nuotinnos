@@ -240,13 +240,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+
     // PDF / Tulostusnappi
-    const printBtn = document.getElementById('print-btn');
-    if (printBtn) {
-        printBtn.addEventListener('click', () => {
-            window.print();
-        });
-    }
+const printBtn = document.getElementById('print-btn');
+if (printBtn) {
+    printBtn.addEventListener('click', () => {
+        const svg = document.querySelector('#paper svg');
+        if (svg) {
+            // Luetaan ABCJS-nuottikuvan korkeus viewBox-määritteestä ja lukitaan se
+            const viewBox = svg.getAttribute('viewBox');
+            if (viewBox) {
+                const parts = viewBox.split(' ');
+                if (parts.length === 4) {
+                    const svgHeight = parts[3];
+                    svg.style.minHeight = svgHeight + 'px';
+                }
+            }
+        }
+        
+        // Avataan tulostusikkuna
+        window.print();
+    });
+}
+
 
 
     // 4. Piste-nappi
