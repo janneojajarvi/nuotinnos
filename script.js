@@ -144,24 +144,27 @@ function initPlayer() {
 
 
 function processAbc() {
-
     const editor = document.getElementById("searchQuery");
+    const clefSelect = document.getElementById("clefSelect");
+    const selectedClef = clefSelect ? clefSelect.value : "treble";
 
     currentAbc = editor.value;
 
-    // Siivotaan mahdolliset vanhat Q: ja L: määritykset pois
-    const cleanAbc = currentAbc.replace(/^[QL]:.*$/gm, "").trim();
+    // Siivotaan vanhat Q:, L: ja K: määritykset pois, jotta ne eivät monistu
+    const cleanAbc = currentAbc.replace(/^[QLK]:.*$/gm, "").trim();
     
-    // Määritellään peruskestoksi L:1/4, jotta 1/4, 1/2, 1/8 ja 1/16 toimivat oikein
-    const abcWithTempo = "L:1/4\nQ:100\n" + cleanAbc;
+    // Luodaan ABC-otsikko: Aika-arvo L:1/4, Tempo Q:100 ja Nuottiavain K:C clef=...
+    const abcHeader = `L:1/4\nQ:100\nK:C clef=${selectedClef}\n`;
+    const abcWithHeader = abcHeader + cleanAbc;
 
-    visualObj = ABCJS.renderAbc("paper", abcWithTempo, {
+    visualObj = ABCJS.renderAbc("paper", abcWithHeader, {
         responsive: "resize",
         paddingbottom: 35
     })[0];
 
     initPlayer();
 }
+
 
 
 // --- TAPAHTUMAT ---
@@ -254,6 +257,29 @@ document.addEventListener('DOMContentLoaded', () => {
             processAbc(); 
         });
     });
+
+    // Taktiviiva- ja kertausmerkkinapit (| ja :)
+    document.querySelectorAll('.bar-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const symbol = e.currentTarget.getAttribute('data-bar') + " ";
+            const start = abcEditor.selectionStart;
+            const end = abcEditor.selectionEnd;
+            
+            abcEditor.value = abcEditor.value.slice(0, start) + symbol + abcEditor.value.slice(end);
+            abcEditor.selectionStart = abcEditor.selectionEnd = start + symbol.length;
+            
+            abcEditor.focus();
+            processAbc();
+        });
+    });
+
+    // Nuottiavaimen vaihto
+    const clefSelect = document.getElementById('clefSelect');
+    if (clefSelect) {
+        clefSelect.addEventListener('change', () => {
+            processAbc();
+        });
+    }
 
 
 
