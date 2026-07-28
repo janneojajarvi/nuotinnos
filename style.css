@@ -358,3 +358,41 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
     min-height: auto;
     background: transparent;
 }
+/* Tyylit tulostusta ja PDF-tallennusta varten */
+@media print {
+    /* Piilotetaan kaikki käyttöliittymän työkalut ja elementit */
+    header, 
+    #piano-input-container, 
+    .search-section, 
+    #audio-container, 
+    #hidden-paper,
+    #full-note-display,
+    button,
+    select {
+        display: none !important;
+    }
+
+    /* Nollataan taustat ja marginaalit A4-sivua varten */
+    body, .app-container {
+        background: white !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    /* Asetetaan nuottipaperi täyttämään sivu siististi */
+    #paper {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    /* Varmistetaan, että SVG-nuotit skaalautuvat oikein */
+    #paper svg {
+        width: 100% !important;
+        height: auto !important;
+    }
+}

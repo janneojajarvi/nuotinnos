@@ -240,6 +240,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // PDF / Tulostusnappi
+    const printBtn = document.getElementById('print-btn');
+    if (printBtn) {
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+    }
+
 
     // 4. Piste-nappi
     const dotBtn = document.getElementById('dot-btn');
