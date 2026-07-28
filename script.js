@@ -149,8 +149,11 @@ function processAbc() {
 
     currentAbc = editor.value;
 
-    const cleanAbc = currentAbc.replace(/^Q:.*$/gm, "").trim();
-    const abcWithTempo = "Q:100\n" + cleanAbc;
+    // Siivotaan vanhat Q: ja L: määritykset pois, jotta ne eivät mene päällekkäin
+    const cleanAbc = currentAbc.replace(/^[QL]:.*$/gm, "").trim();
+    
+    // Määritellään peruskestoksi L:1/4
+    const abcWithTempo = "L:1/4\nQ:100\n" + cleanAbc;
 
     visualObj = ABCJS.renderAbc("paper", abcWithTempo, {
         responsive: "resize",
