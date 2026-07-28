@@ -222,91 +222,9 @@ function toggleManualEdit() {
 
 // --- LATAUS JA HAKU ---
 
-async function initApp() {
-    const loaderBar = document.getElementById("loader-bar");
-    const loaderPercent = document.getElementById("loader-percent");
-    const loaderContainer = document.getElementById("loader-container");
 
-    for (let i = 0; i < urls.length; i++) {
-        try {
-            const response = await fetch(urls[i]);
-            const text = await response.text();
-            const startIdx = text.indexOf('[');
-            const endIdx = text.lastIndexOf(']');
-            
-            if (startIdx !== -1 && endIdx !== -1) {
-                const data = new Function('return ' + text.substring(startIdx, endIdx + 1))();
-                if (Array.isArray(data)) {
-                    data.forEach(tune => {
-                        if (tune.abc) {
-                            tune.fingerprint = getFingerprint(tune.abc);
-                            window.melodyLibrary.push(tune);
-                        }
-                    });
-                }
-            }
-            const progress = Math.round(((i + 1) / urls.length) * 100);
-            if (loaderBar) loaderBar.style.width = progress + "%";
-            if (loaderPercent) loaderPercent.textContent = progress + "%";
-        } catch (e) { console.error(e); }
-    }
-    if (loaderContainer) loaderContainer.style.display = 'none';
-}
 
 function handleSearch() {
-
-    if (ABCJS.synth.supportsAudio()) {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioContext.state === 'suspended') {
-            audioContext.resume();
-        }
-    }
-    const abcEditor = document.getElementById('searchQuery');
-    const input = abcEditor.value;
-    const searchBtn = document.getElementById('search-btn');
-
-    if (input.replace(/\s/g, "").length < 3) {
-        alert("Kirjoita vähintään 3 nuottia ennen hakua.");
-        return;
-    }
-
-    // Muutetaan napin teksti hetkeksi
-    searchBtn.innerText = "Etsitään...";
-    searchBtn.disabled = true;
-
-    // Käytetään setTimeoutia, jotta "Etsitään..." ehtii piirtyä ennen raskasta hakua
-    setTimeout(() => {
-        let rawFP = getFingerprint(input);
-        if (!rawFP) {
-            searchBtn.innerText = "Hae kappaleita";
-            searchBtn.disabled = false;
-            return;
-        }
-
-        let searchIntervals = rawFP.split('|')
-                                   .filter(x => x.length > 0)
-                                   .map(x => x.split(':')[0])
-                                   .join('|');
-
-        const matches = window.melodyLibrary.filter(t => {
-            if (!t.fingerprint) return false;
-            let libIntervals = t.fingerprint.split('|')
-                                           .filter(x => x.length > 0)
-                                           .map(x => x.split(':')[0])
-                                           .join('|');
-            return libIntervals.includes(searchIntervals);
-        });
-
-        const list = document.getElementById('results-list');
-        document.getElementById('match-count').innerText = matches.length;
-        list.innerHTML = "";
-
-        matches.slice(0, 50).forEach(tune => {
-    const div = document.createElement('div');
-    div.className = 'tune-card';
-
-    let displayName = tune.name;
-    const abc = tune.abc;
 
     // Apufunktio kentän poimimiseen (varmempi versio)
     function getAbcField(fieldTag) {
