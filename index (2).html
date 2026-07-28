@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Melodia-etsivä</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+    <link rel="icon" href="kuva.png">
+    <link rel="apple-touch-icon" href="kuva.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/abcjs@6.2.2/abcjs-audio.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <h1>🔍 Melodia-etsivä</h1>
+    
+    <div id="loader-container" style="margin: 20px 0; display: block;">
+      <div id="loader-text">Ladataan nuottikirjastoa...</div>
+      <div id="loader-bar-wrapper" style="width: 100%; height: 20px; background: #ddd; border-radius: 10px; overflow: hidden;">
+          <div id="loader-bar" style="width: 0%; height: 100%; background: #4caf50; transition: width 0.2s;"></div>
+      </div>
+      <div id="loader-percent" style="margin-top: 6px; font-size: 13px; text-align: center;">0%</div>
+    </div>
+
+   <div id="piano-input-container">
+  <div class="input-row tools-row">
+    <div class="button-group">
+    <button type="button" class="dur-btn active" data-dur="1">1/4</button>
+    <button type="button" class="dur-btn" data-dur="2">1/2</button>
+    <button type="button" class="dur-btn" data-dur="/2">1/8</button>
+    <button type="button" class="dur-btn" data-dur="/4">1/16</button>
+    <button type="button" id="dot-btn" class="tool-btn">.</button>
+</div>
+    
+    <div class="button-group accent-group">
+      <button type="button" class="acc-btn" data-acc="^">♯</button>
+      <button type="button" class="acc-btn" data-acc="_">♭</button>
+      <button type="button" class="acc-btn" data-acc="=">♮</button>
+      <button type="button" id="backspace-btn" class="tool-btn" style="background: #fce4ec; border-color: #f06292;">⌫</button>
+    </div>
+  </div>
+  
+  </div>
+  
+  <div class="input-row piano-row small-notes">
+    <button type="button" class="note-btn" data-note="c">c</button>
+    <button type="button" class="note-btn" data-note="d">d</button>
+    <button type="button" class="note-btn" data-note="e">e</button>
+    <button type="button" class="note-btn" data-note="f">f</button>
+    <button type="button" class="note-btn" data-note="g">g</button>
+    <button type="button" class="note-btn" data-note="a">a</button>
+    <button type="button" class="note-btn" data-note="b">b</button>
+  </div>
+
+  <div class="input-row piano-row">
+    <button type="button" class="note-btn" data-note="C">C</button>
+    <button type="button" class="note-btn" data-note="D">D</button>
+    <button type="button" class="note-btn" data-note="E">E</button>
+    <button type="button" class="note-btn" data-note="F">F</button>
+    <button type="button" class="note-btn" data-note="G">G</button>
+    <button type="button" class="note-btn" data-note="A">A</button>
+    <button type="button" class="note-btn" data-note="B">B</button>
+    <button type="button" class="note-btn space-btn" data-note="z">Tauko</button>
+  </div>
+</div>
+    
+    <p>Kirjoita pätkä melodiaa ABC-muodossa tai käytä nappeja. Työkalu etsii vastaavuudet kaikissa sävellajeissa.</p>
+  </header>
+
+  <div class="search-section">
+    <div style="position: relative;">
+        <textarea id="searchQuery" 
+                  placeholder="Esim: C C G G A A G2" 
+                  inputmode="none" 
+                  readonly></textarea>
+        
+        <button id="manual-edit-btn" 
+                onclick="toggleManualEdit()" 
+                style="position: absolute; right: 5px; top: 5px; background: none; border: none; font-size: 20px; cursor: pointer;">
+            ✏️
+        </button>
+    </div>
+    <div class="button-group">
+      <button id="search-btn" class="primary-btn" style="margin-top: 10px; padding: 12px 20px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold;">Hae kappaleita</button>
+<button id="clearSearch" style="margin-top: 10px; padding: 12px 20px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold;">🗑️ Tyhjennä</button>
+    </div>
+    <div id="search-preview"></div>
+</div>
+  <div class="instructions-grid">
+    <div class="instr-card">
+      <h4>🎵 Nuotit & Korkeus</h4>
+      <ul>
+        <li><code>C D E</code> Perussävelet</li>
+        <li><code>c d e</code> Yläoktaavi</li>
+        <li><code>C, D,</code> Alaoktaavi</li>
+        <li><code>^C</code> Ylennys, <code>_E</code> Alennus</li>
+      </ul>
+    </div>
+    <div class="instr-card">
+      <h4>⏱️ Aika-arvot & Tauot</h4>
+      <ul>
+        <li><code>C2</code> Puolinuotti (pitkä)</li>
+        <li><code>C/2</code> Kahdeksasosa (lyhyt)</li>
+        <li><code>z</code> Tauko</li>
+        <li><code>(3GAB</code> Trioli</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="results-section">
+    <h2>Löydetyt kappaleet (<span id="match-count">0</span>)</h2>
+    <div id="results-list"></div>
+  </div>
+    <div id="audio-container">
+  <div id="audio-controls" style="margin-top: 10px; display: none;">
+    <button id="play-btn">Soita</button>
+    <button id="stop-btn">Pysäytä</button>
+    <div id="audio-status" style="display: inline-block; margin-left: 10px; font-size: 0.8em;"></div>
+</div>
+        <div class="tempo-container">
+    <label for="tempoRange">Tempo: <span id="tempoDisplay">100</span> BPM</label>
+    <input type="range" id="tempoRange" min="30" max="240" value="100">
+</div>
+        </div>
+<div id="paper"></div>
+  <div id="full-note-display">
+    <div id="paper"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/abcjs/6.2.2/abcjs-basic-min.js"></script>
+<script src="script.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('Service Worker rekisteröity'))
+        .catch(err => console.log('SW rekisteröintivirhe', err));
+}
+</script>
+<div id="hidden-paper" style="display:none"></div>
+</body>
+</html>

@@ -1,0 +1,360 @@
+:root {
+  --primary: #4a90e2;
+  --bg: #f5f7fa;
+  --card: #ffffff;
+  --instr-bg: #eef2f7;
+}
+
+body { font-family: sans-serif; background: var(--bg); padding: 20px; color: #333; }
+.app-container { max-width: 800px; margin: 0 auto; }
+
+textarea {
+  width: 100%; height: 100px; padding: 15px;
+  border: 2px solid #ddd; border-radius: 8px;
+  font-family: monospace; font-size: 1.1rem; box-sizing: border-box;
+}
+
+#search-preview {
+  background: white; margin: 10px 0; padding: 10px;
+  border-radius: 8px; min-height: 80px;
+}
+
+.instructions-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;
+}
+
+.instr-card {
+  background: var(--instr-bg); padding: 12px;
+  border-radius: 8px; font-size: 0.85rem;
+}
+
+.instr-card h4 { margin: 0 0 8px 0; border-bottom: 1px solid #ccc; }
+.instr-card ul { list-style: none; padding: 0; margin: 0; }
+code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold; }
+
+.tune-card {
+  background: var(--card); padding: 15px; margin-bottom: 8px;
+  border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  cursor: pointer; border-left: 4px solid transparent;
+}
+
+.tune-card:hover { border-left-color: var(--primary); background: #fdfdfd; }
+.loader { text-align: center; padding: 20px; color: #666; }
+
+#piano-input-container {
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.input-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.dur-btn, .note-btn {
+    flex: 1;
+    padding: 15px 5px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    touch-action: manipulation; /* Estää zoomailun tuplaklikkauksella */
+}
+
+.dur-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.note-btn:active {
+    background: #e0e0e0;
+}
+
+.space-btn {
+    background: #fff3cd;
+}
+
+
+
+.acc-btn {
+    flex: 1;
+    padding: 12px 5px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.acc-btn.active {
+    background: #f39c12; /* Oranssi väri erottamaan etumerkit kestosta */
+    color: white;
+    border-color: #d35400;
+}
+
+/* Tehdään ylemmästä oktaavista hieman pienempi tai erivärinen */
+.small-notes .note-btn {
+    background: #f9f9f9;
+    font-size: 0.9em;
+}
+
+.tool-btn {
+    flex: 0.5;
+    padding: 12px 5px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#dot-btn.active {
+    background: #4caf50;
+    color: white;
+}
+
+#backspace-btn:active {
+    background: #f06292 !important;
+    color: white;
+}
+
+.button-group {
+    display: flex;      /* Asettaa elementit vierekkäin */
+  flex-wrap: wrap;    /* TÄMÄ ON TÄRKEÄ: sallii nappien siirtyä uudelle riville */
+    gap: 8px;          /* Jättää pienen raon nappien välille */
+    margin-top: 15px;   /* Lisää hieman tilaa tekstikentän ja nappien välille */
+    width: 100%;        /* Varmistaa, että ryhmä vie koko leveyden */
+}
+
+
+
+.button-group button {
+    flex: 1 1 calc(20% - 10px); /* TÄMÄ: yrittää laittaa n. 5 nappia per rivi, mutta joustaa */
+    min-width: 50px;           /* Estää nappeja menemästä liian pieniksi */
+    padding: 12px 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;           /* Hyvä koko sormella painamiseen */
+}
+
+/* Voit tyylitellä haku-napin erottumaan */
+#search-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+#clearSearch {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+#audio-controls {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+/* Piilotetaan oletuspainikkeet, jos haluat käyttää omia painikkeitasi, 
+   tai jätä nämä pois jos haluat käyttää abcjs:n valmiita säätimiä. */
+.abcjs-pwa-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Containerin tyyli */
+#audio-controls {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: 20px 0;
+    border: 1px solid #e1e8ed;
+}
+
+/* ABCJS sisäisen soittimen muotoilu */
+.abcjs-audio {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Play/Pause-painikkeen muotoilu */
+.abcjs-btn {
+    background-color: var(--primary) !important;
+    fill: white !important; /* Muuttaa nuolen värin */
+    border-radius: 50% !important;
+    padding: 10px !important;
+    width: 45px !important;
+    height: 45px !important;
+    transition: transform 0.2s ease;
+}
+
+.abcjs-btn:hover {
+    transform: scale(1.05);
+    background-color: #357abd !important;
+}
+
+/* Edistymispalkin (Progress bar) tyyli */
+.abcjs-midi-progress-background {
+    background-color: #eee !important;
+    border-radius: 5px !important;
+    height: 8px !important;
+}
+
+.abcjs-midi-progress-indicator {
+    background-color: var(--primary) !important;
+    border-radius: 5px !important;
+}
+
+/* Tempon säätö (Warp) */
+.abcjs-midi-tempo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+}
+
+.meta-info {
+    font-size: 0.8em;
+    color: #666;
+    font-style: italic;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+/* Pakotetaan ABCJS-soittimen kontrollit näkyviin mobiilissa */
+#audio-controls .abcjs-pushed {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Säädetään temponäyttöä ja nappeja suuremmiksi sormella painettaviksi */
+.abcjs-tempo-wrapper {
+    display: flex !important;
+    align-items: center;
+    font-size: 1.2em; /* Suurempi teksti puhelimeen */
+    margin: 5px;
+}
+
+/* Jos soitin on silti liian leveä, sallitaan sen sisäosien rivitys */
+.abcjs-midi-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Varmistetaan että ABCJS-soittimen kontrollit näkyvät */
+.abcjs-video-controls {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+}
+
+/* Tehdään temponapeista isompia mobiilikäyttöön */
+.abcjs-btn {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* 1. PAKOTETAAN ELEMENTIT NÄKYVIIN MOBIILISSA */
+.abcjs-video-controls, 
+.abcjs-midi-controls, 
+.abcjs-audio {
+    display: flex !important; /* Pakottaa näkyviin */
+    flex-wrap: wrap !important; /* Sallii rivittymisen jos liian leveä */
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* 2. TEMPO JA WARP-NAPIT */
+/* Etsitään tempo- ja säätöelementit ja varmistetaan niiden koko */
+.abcjs-tempo-wrapper, 
+.abcjs-midi-tempo,
+.abcjs-video-tempo {
+    display: flex !important;
+    align-items: center !important;
+    order: 10; /* Siirtää tempon viimeiseksi tai omalle rivilleen mobiilissa */
+}
+
+/* 3. TEHDÄÄN NAPEISTA PAINETTAVIA */
+/* ABCJS käyttää usein svg-kuvakkeita, varmistetaan että napit ovat fyysisesti olemassa */
+.abcjs-btn {
+    min-width: 48px !important; /* Applen/Googlen suositus minimikooksi */
+    min-height: 48px !important;
+    margin: 2px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 4. ESTETÄÄN SOITINTA KATOAMASTA REUNAN YLI */
+#audio-controls {
+    overflow: visible !important;
+    min-height: 80px; /* Varmistetaan että tilaa riittää kahdelle riville */
+}
+
+/* 5. TYPOGRAFIA MOBIILISSA */
+@media (max-width: 600px) {
+    .abcjs-midi-progress-background {
+        width: 100% !important; /* Edistymispalkki vie koko leveyden */
+        order: -1; /* Nostaa palkin ylimmäksi mobiilissa */
+        margin-bottom: 10px;
+    }
+    
+    .abcjs-audio {
+        padding: 10px 5px !important;
+    }
+}
+
+/* Piilotetaan ABCJS:n oma temponäyttö, joka sotkee asettelun */
+.abcjs-tempo-wrapper, .abcjs-midi-tempo {
+    display: none !important;
+}
+
+/* Omat temponapit */
+.custom-tempo-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.custom-tempo-controls button {
+    padding: 8px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#audio-controls {
+    /* Palautetaan soitin perusmuotoon ilman päällekkäisyyksiä */
+    width: 100%;
+    min-height: auto;
+    background: transparent;
+}
