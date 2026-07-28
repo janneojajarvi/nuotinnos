@@ -259,19 +259,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Taktiviiva- ja kertausmerkkinapit (| ja :)
-    document.querySelectorAll('.bar-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const symbol = e.currentTarget.getAttribute('data-bar') + " ";
-            const start = abcEditor.selectionStart;
-            const end = abcEditor.selectionEnd;
-            
-            abcEditor.value = abcEditor.value.slice(0, start) + symbol + abcEditor.value.slice(end);
-            abcEditor.selectionStart = abcEditor.selectionEnd = start + symbol.length;
-            
-            abcEditor.focus();
-            processAbc();
-        });
+document.querySelectorAll('.bar-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        // Otetaan merkki ilman automaattista välilyöntiä
+        const symbol = e.currentTarget.getAttribute('data-bar');
+        const start = abcEditor.selectionStart;
+        const end = abcEditor.selectionEnd;
+        
+        abcEditor.value = abcEditor.value.slice(0, start) + symbol + abcEditor.value.slice(end);
+        abcEditor.selectionStart = abcEditor.selectionEnd = start + symbol.length;
+        
+        abcEditor.focus();
+        processAbc();
     });
+});
+
 
     // Nuottiavaimen vaihto
     const clefSelect = document.getElementById('clefSelect');
