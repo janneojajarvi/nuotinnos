@@ -27,6 +27,44 @@ let currentWarp = 1.0;
 
 // --- APUFUNKTIOT ---
 
+// Transponoi kaikki tekstikentän nuotit oktaavilla ylös (+1) tai alas (-1)
+function transposeOctave(direction) {
+    const abcEditor = document.getElementById('searchQuery');
+    if (!abcEditor || !abcEditor.value.trim()) return;
+
+    // Säännöllinen lauseke tunnistaa nuotit (etumerkki, sävelkirjain A-G/a-g ja oktaavimerkit , tai ')
+    const regex = /(?<![a-zA-Z])(\^\^|\^|__|_|=)?([A-Ga-g])([,']*)(?![a-zA-Z])/g;
+
+    abcEditor.value = abcEditor.value.replace(regex, (match, acc = "", note, oct = "") => {
+        let newNote = note;
+        let newOct = oct;
+
+        if (direction === 1) { // Oktaavi ylöspäin
+            if (newOct.includes(',')) {
+                newOct = newOct.replace(',', ''); // C, -> C
+            } else if (note === note.toUpperCase()) {
+                newNote = note.toLowerCase();   // C -> c
+            } else {
+                newOct += "'";                  // c -> c'
+            }
+        } else if (direction === -1) { // Oktaavi alaspäin
+            if (newOct.includes("'")) {
+                newOct = newOct.replace("'", ''); // c' -> c
+            } else if (note === note.toLowerCase()) {
+                newNote = note.toUpperCase();   // c -> C
+            } else {
+                newOct += ",";                  // C -> C,
+            }
+        }
+
+        return acc + newNote + newOct;
+    });
+
+    // Päivitetään nuottikuva ja soitin
+    processAbc();
+}
+
+
 function getPitchValue(acc, note, oct) {
     const basePitches = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 };
     let p = basePitches[note.toUpperCase()];
@@ -211,6 +249,18 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.classList.toggle('active', isDottedMode);
         });
     }
+    
+        // Oktaavinapit
+    const octDownBtn = document.getElementById('oct-down-btn');
+    const octUpBtn = document.getElementById('oct-up-btn');
+
+    if (octDownBtn) {
+        octDownBtn.addEventListener('click', () => transposeOctave(-1));
+    }
+    if (octUpBtn) {
+        octUpBtn.addEventListener('click', () => transposeOctave(1));
+    }
+
 
     // 5. Etumerkki-napit
     document.querySelectorAll('.acc-btn').forEach(btn => {
