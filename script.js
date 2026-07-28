@@ -149,10 +149,10 @@ function processAbc() {
 
     currentAbc = editor.value;
 
-    // Siivotaan vanhat Q: ja L: määritykset pois, jotta ne eivät mene päällekkäin
+    // Siivotaan mahdolliset vanhat Q: ja L: määritykset pois
     const cleanAbc = currentAbc.replace(/^[QL]:.*$/gm, "").trim();
     
-    // Määritellään peruskestoksi L:1/4
+    // Määritellään peruskestoksi L:1/4, jotta 1/4, 1/2, 1/8 ja 1/16 toimivat oikein
     const abcWithTempo = "L:1/4\nQ:100\n" + cleanAbc;
 
     visualObj = ABCJS.renderAbc("paper", abcWithTempo, {
@@ -162,6 +162,7 @@ function processAbc() {
 
     initPlayer();
 }
+
 
 // --- TAPAHTUMAT ---
 
@@ -191,12 +192,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Kesto-napit
     document.querySelectorAll('.dur-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
             document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            selectedDuration = btn.getAttribute('data-dur');
+            e.currentTarget.classList.add('active');
+            selectedDuration = e.currentTarget.getAttribute('data-dur');
         });
     });
+
 
     // 4. Piste-nappi
     const dotBtn = document.getElementById('dot-btn');
