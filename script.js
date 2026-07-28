@@ -273,12 +273,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-   // 9. Tyhjennys
+// 9. Tyhjennys
+const clearBtn = document.getElementById('clearSearch'); // <-- LISÄÄ TÄMÄ RIVI
 if (clearBtn) {
     clearBtn.addEventListener('click', () => {
         abcEditor.value = "";
-        processAbc(); // <-- Korvaa tässä olleet turhat rivit ja ABCJS.renderAbc
+        processAbc();
     });
 }
+
 
 }); // Tämä sulkee DOMContentLoaded-funktion oikein
