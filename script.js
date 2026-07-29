@@ -116,21 +116,72 @@ function openTune(){
         .classList.remove("hidden");
 }
 
-function renderLibrary(){
+function renderLibrary() {
 
-    const tunes = JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || "[]"
-    );
+    const tunes = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
     const list = document.getElementById("libraryList");
-
     list.innerHTML = "";
 
-    tunes.forEach((tune,index)=>{
+    if (tunes.length === 0) {
+        list.innerHTML = "<p>Ei tallennettuja kappaleita.</p>";
+        return;
+    }
 
-        ...
+    tunes.forEach((tune, index) => {
+
+        const item = document.createElement("div");
+        item.className = "library-item";
+
+        const date = new Date(tune.modified).toLocaleString("fi-FI");
+
+        item.innerHTML = `
+            <h3>🎼 ${tune.name}</h3>
+            <div>${date}</div>
+
+            <div class="library-buttons">
+                <button class="open-tune" data-index="${index}">Avaa</button>
+                <button class="delete-tune" data-index="${index}">🗑️ Poista</button>
+            </div>
+        `;
+
+        list.appendChild(item);
     });
 
+    // Avaa
+    list.querySelectorAll(".open-tune").forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            const i = parseInt(btn.dataset.index);
+
+            document.getElementById("searchQuery").value = tunes[i].abc;
+
+            processAbc();
+
+            document.getElementById("libraryModal")
+                .classList.add("hidden");
+        });
+    });
+
+    // Poista
+    list.querySelectorAll(".delete-tune").forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            const i = parseInt(btn.dataset.index);
+
+            if (!confirm(`Poistetaanko "${tunes[i].name}"?`))
+                return;
+
+            tunes.splice(i, 1);
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(tunes)
+            );
+
+            renderLibrary();
+        });
+    });
 }
 
 function newTune() {
@@ -287,6 +338,12 @@ document.getElementById("newBtn")
 
 document.addEventListener('DOMContentLoaded', () => {
    processAbc();  
+   
+   document.getElementById("closeLibraryBtn")
+    .addEventListener("click", () => {
+        document.getElementById("libraryModal")
+            .classList.add("hidden");
+    });
     
     const abcEditor = document.getElementById('searchQuery');
     const tempoRange = document.getElementById('tempoRange');
