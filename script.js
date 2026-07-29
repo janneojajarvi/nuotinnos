@@ -32,6 +32,8 @@ function transposeOctave(direction) {
     const abcEditor = document.getElementById('searchQuery');
     if (!abcEditor || !abcEditor.value.trim()) return;
 
+const STORAGE_KEY = "abc-notebook";
+
     // Säännöllinen lauseke tunnistaa nuotit (etumerkki, sävelkirjain A-G/a-g ja oktaavimerkit , tai ')
     const regex = /(?<![a-zA-Z])(\^\^|\^|__|_|=)?([A-Ga-g])([,']*)(?![a-zA-Z])/g;
 
@@ -78,6 +80,74 @@ function getPitchValue(acc, note, oct) {
     if (acc === '^') p += 1;
     if (acc === '_') p -= 1;
     return p;
+}
+
+function saveTune() {
+
+    const name = prompt("Kappaleen nimi:");
+
+    if (!name) return;
+
+    let tunes = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+    const tune = {
+        name,
+        modified: Date.now(),
+        abc: document.getElementById("searchQuery").value
+    };
+
+    const existing = tunes.findIndex(t => t.name === name);
+
+    if (existing >= 0) {
+        tunes[existing] = tune;
+    } else {
+        tunes.push(tune);
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tunes));
+
+    alert("Tallennettu.");
+}
+
+function openTune() {
+
+    const tunes = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+    if (tunes.length === 0) {
+        alert("Ei tallennettuja kappaleita.");
+        return;
+    }
+
+    const list = tunes
+        .map((t, i) => `${i + 1}. ${t.name}`)
+        .join("\n");
+
+    const index = parseInt(
+        prompt("Valitse numero:\n\n" + list)
+    );
+
+    if (isNaN(index) || index < 1 || index > tunes.length) return;
+
+    document.getElementById("searchQuery").value =
+        tunes[index - 1].abc;
+
+    processAbc();
+}
+
+function newTune() {
+
+    if (!confirm("Tyhjennetäänkö nykyinen kappale?")) return;
+
+    document.getElementById("searchQuery").value =
+`X:1
+T:Uusi kappale
+M:4/4
+L:1/8
+K:C
+
+`;
+
+    processAbc();
 }
 
 function playSingleNote(noteAbc) {
@@ -207,7 +277,14 @@ function processAbc() {
 
 // --- TAPAHTUMAT ---
 
+document.getElementById("saveBtn")
+    .addEventListener("click", saveTune);
 
+document.getElementById("openBtn")
+    .addEventListener("click", openTune);
+
+document.getElementById("newBtn")
+    .addEventListener("click", newTune);
 
 document.addEventListener('DOMContentLoaded', () => {
    processAbc();  
