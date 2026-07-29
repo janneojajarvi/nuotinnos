@@ -7,6 +7,7 @@ let synthControl;
 let currentAbc;
 let visualObj; // Globaali muuttuja temposäädintä varten
 
+const STORAGE_KEY = "abc-notebook";
 
 let currentWarp = 1.0;
 
@@ -32,7 +33,7 @@ function transposeOctave(direction) {
     const abcEditor = document.getElementById('searchQuery');
     if (!abcEditor || !abcEditor.value.trim()) return;
 
-const STORAGE_KEY = "abc-notebook";
+
 
     // Säännöllinen lauseke tunnistaa nuotit (etumerkki, sävelkirjain A-G/a-g ja oktaavimerkit , tai ')
     const regex = /(?<![a-zA-Z])(\^\^|\^|__|_|=)?([A-Ga-g])([,']*)(?![a-zA-Z])/g;
