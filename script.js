@@ -230,7 +230,42 @@ function playSingleNote(noteAbc) {
     }).catch(err => console.warn("Nuotin soitto epäonnistui:", err));
 }
 
+function exportAbc() {
 
+    const abc = document.getElementById("searchQuery").value.trim();
+
+    if (!abc) {
+        alert("Ei vietävää nuottia.");
+        return;
+    }
+
+    // Otetaan tiedostonimi T:-kentästä
+    let fileName = "untitled";
+
+    const titleMatch = abc.match(/^T:(.*)$/m);
+
+    if (titleMatch) {
+        fileName = titleMatch[1]
+            .trim()
+            .replace(/[\\/:*?"<>|]/g, "_");
+    }
+
+    const blob = new Blob([abc], {
+        type: "text/plain;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName + ".abc";
+
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
 
 function toggleManualEdit() {
@@ -343,6 +378,9 @@ function processAbc() {
 
 
 // --- TAPAHTUMAT ---
+
+document.getElementById("exportAbcBtn")
+    .addEventListener("click", exportAbc);
 
 document.getElementById("saveBtn")
     .addEventListener("click", saveTune);
