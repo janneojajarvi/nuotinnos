@@ -188,7 +188,9 @@ function newTune() {
 
     if (!confirm("Tyhjennetäänkö nykyinen kappale?")) return;
 
-    document.getElementById("searchQuery").value =
+    const editor = document.getElementById("searchQuery");
+
+    editor.value =
 `X:1
 T:Uusi kappale
 M:4/4
@@ -196,6 +198,10 @@ L:1/8
 K:C
 
 `;
+
+    // Siirrä kohdistin tekstin loppuun
+    editor.focus();
+    editor.selectionStart = editor.selectionEnd = editor.value.length;
 
     processAbc();
 }
