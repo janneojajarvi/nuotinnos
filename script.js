@@ -110,29 +110,27 @@ function saveTune() {
     alert("Tallennettu.");
 }
 
-function openTune() {
+function openTune(){
+    renderLibrary();
+    document.getElementById("libraryModal")
+        .classList.remove("hidden");
+}
 
-    const tunes = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+function renderLibrary(){
 
-    if (tunes.length === 0) {
-        alert("Ei tallennettuja kappaleita.");
-        return;
-    }
-
-    const list = tunes
-        .map((t, i) => `${i + 1}. ${t.name}`)
-        .join("\n");
-
-    const index = parseInt(
-        prompt("Valitse numero:\n\n" + list)
+    const tunes = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "[]"
     );
 
-    if (isNaN(index) || index < 1 || index > tunes.length) return;
+    const list = document.getElementById("libraryList");
 
-    document.getElementById("searchQuery").value =
-        tunes[index - 1].abc;
+    list.innerHTML = "";
 
-    processAbc();
+    tunes.forEach((tune,index)=>{
+
+        ...
+    });
+
 }
 
 function newTune() {

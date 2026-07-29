@@ -382,3 +382,38 @@ code { background: #fff; padding: 2px 4px; border-radius: 3px; font-weight: bold
         height: auto !important;
     }
 }
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.hidden{
+    display:none;
+}
+
+.modal-content{
+    background:white;
+    width:95%;
+    max-width:500px;
+    max-height:85vh;
+    overflow-y:auto;
+    border-radius:12px;
+    padding:15px;
+}
+
+.library-item{
+    border-bottom:1px solid #ddd;
+    padding:12px 0;
+}
+
+.library-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:8px;
+}
