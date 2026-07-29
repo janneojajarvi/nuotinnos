@@ -314,14 +314,26 @@ function processAbc() {
 
     currentAbc = editor.value;
 
-    // Siivotaan vanhat Q:, L: ja K: määritykset pois, jotta ne eivät monistu
-    const cleanAbc = currentAbc.replace(/^[QLK]:.*$/gm, "").trim();
-    
-    // Luodaan ABC-otsikko: Aika-arvo L:1/4, Tempo Q:100 ja Nuottiavain K:C clef=...
-    const abcHeader = `L:1/4\nQ:100\nK:C clef=${selectedClef}\n`;
-    const abcWithHeader = abcHeader + cleanAbc;
+    // Käytetään kopiota editorin tekstistä
+    let abc = currentAbc;
 
-    visualObj = ABCJS.renderAbc("paper", abcWithHeader, {
+    // Poistetaan vain vanhat Q:-rivit
+    abc = abc.replace(/^Q:.*$/gm, "");
+
+    // Lisätään Q:100 ennen ensimmäistä K:-riviä
+    if (/^K:/m.test(abc)) {
+        abc = abc.replace(/^K:(.*)$/m, `Q:100\nK:$1`);
+    } else {
+        abc = "Q:100\nK:C\n" + abc;
+    }
+
+    // Päivitetään nuottiavain säilyttäen sävellaji
+    abc = abc.replace(/^K:([^\n]*)$/m, (match, key) => {
+        key = key.replace(/\s+clef=\S+/g, "").trim();
+        return `K:${key} clef=${selectedClef}`;
+    });
+
+    visualObj = ABCJS.renderAbc("paper", abc, {
         responsive: "resize",
         paddingbottom: 35
     })[0];
