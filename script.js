@@ -194,7 +194,7 @@ function newTune() {
 `X:1
 T:Uusi kappale
 M:4/4
-L:1/8
+L:1/4
 K:C
 `;
 
