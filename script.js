@@ -196,7 +196,6 @@ T:Uusi kappale
 M:4/4
 L:1/8
 K:C
-
 `;
 
     // Siirrä kohdistin tekstin loppuun
