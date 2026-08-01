@@ -627,7 +627,7 @@ function getBeamGroup() {
 }
 
 function optimizeBeaming() {
-
+alert("Optimointi käynnistyi");
     const group = getBeamGroup();
 
     if (!group) {
@@ -671,7 +671,7 @@ function optimizeBeaming() {
     }
 
     editor.value = lines.join("\n");
-
+alert(editor.value);
     processAbc();
 
 }
