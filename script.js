@@ -9,6 +9,43 @@ let visualObj; // Globaali muuttuja temposäädintä varten
 
 const STORAGE_KEY = "abc-notebook";
 
+const helpExamples = [
+
+{
+    title: "Perustiedot",
+    text: "Yleisimmät ABC-kentät",
+    abc:
+`X:1
+T:Otsikko
+M:4/4
+L:1/4
+K:C`
+},
+
+{
+    title: "Nuotit",
+    text: "Sävelnimet",
+    abc:
+`C D E F G A B
+c d e f g a b`
+},
+
+{
+    title: "Kertaus",
+    text: "Yksinkertainen kertaus",
+    abc:
+`|: C D E F :|`
+},
+
+{
+    title: "1. ja 2. maali",
+    text: "Ensimmäinen ja toinen lopuke",
+    abc:
+`|: C D |[1 E F :|[2 G A ||`
+}
+
+];
+
 let currentWarp = 1.0;
 
  function changeTempo(newBpm) {
@@ -65,6 +102,54 @@ function transposeOctave(direction) {
 
     // Päivitetään nuottikuva ja soitin
     processAbc();
+}
+
+function renderHelp() {
+
+    const container = document.getElementById("helpContent");
+
+    container.innerHTML = "";
+
+    helpExamples.forEach(example => {
+
+        const div = document.createElement("div");
+        div.className = "help-example";
+
+        div.innerHTML = `
+            <h3>${example.title}</h3>
+            <p>${example.text}</p>
+            <pre>${example.abc}</pre>
+            <button class="insertExampleBtn">
+                Lisää editoriin
+            </button>
+        `;
+
+        div.querySelector("button").addEventListener("click", () => {
+
+            const editor = document.getElementById("searchQuery");
+
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+
+            editor.value =
+                editor.value.substring(0,start) +
+                example.abc +
+                editor.value.substring(end);
+
+            editor.selectionStart =
+            editor.selectionEnd =
+                start + example.abc.length;
+
+            editor.focus();
+
+            processAbc();
+
+        });
+
+        container.appendChild(div);
+
+    });
+
 }
 
 
@@ -506,7 +591,21 @@ document.addEventListener('DOMContentLoaded', () => {
         editor.value = getNewTuneTemplate();
     }
 
-    
+    document.getElementById("helpBtn")
+.addEventListener("click", () => {
+
+    renderHelp();
+
+    document.getElementById("helpModal")
+        .classList.remove("hidden");
+
+});
+
+document.getElementById("closeHelpBtn")
+    .addEventListener("click", () => {
+        document.getElementById("helpModal")
+            .classList.add("hidden");
+    });
    
    document.getElementById("closeLibraryBtn")
     .addEventListener("click", () => {
