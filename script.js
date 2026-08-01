@@ -626,43 +626,70 @@ function getBeamGroup() {
 
 }
 
-function getNoteLength(note, defaultLength = 1) {
+function getDefaultLength() {
+
+    const abc = document.getElementById("searchQuery").value;
+
+    const m = abc.match(/^L:\s*(\d+)\/(\d+)/m);
+
+    if (!m)
+        return 1 / 4;      // oletus 1/4
+
+    return parseInt(m[1]) / parseInt(m[2]);
+}
+
+function getNoteLength(note) {
+
+    const base = getDefaultLength();
 
     const m = note.match(/(\d+\/\d+|\/\d+|\d+)$/);
 
-    if (!m) return defaultLength;
+    if (!m)
+        return base;
 
     const len = m[1];
 
-    if (len.startsWith("/")) {
-        return 1 / parseInt(len.slice(1));
-    }
+    if (len.startsWith("/"))
+        return base / parseInt(len.slice(1));
 
     if (len.includes("/")) {
+
         const [a,b] = len.split("/");
-        return parseInt(a) / parseInt(b);
+
+        return base * parseInt(a) / parseInt(b);
     }
 
-    return parseInt(len);
+    return base * parseInt(len);
 }
 
 function getBeatLength() {
 
-    switch (getMeter()) {
+    const beat = getMeter().split("/");
 
-        case "2/4":
-        case "3/4":
-        case "4/4":
-            return 1;
+    if (beat.length != 2)
+        return getDefaultLength();
 
-        case "6/8":
-        case "9/8":
-        case "12/8":
-            return 1.5;
+    const denominator = parseInt(beat[1]);
 
-        default:
-            return 1;
+    // 4/4 -> neljäsosa
+    if (denominator == 4)
+        return 1/4;
+
+    // 2/2 -> puolinuotti
+    if (denominator == 2)
+        return 1/2;
+
+    // 3/8 -> kahdeksasosa
+    if (denominator == 8) {
+
+        // Yhdistetyt tahtilajit
+        if (beat[0] == "6" || beat[0] == "9" || beat[0] == "12")
+            return 3/8;
+
+        return 1/8;
     }
+
+    return getDefaultLength();
 }
 
 
