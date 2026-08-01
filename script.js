@@ -627,7 +627,7 @@ function getBeamGroup() {
 }
 
 function optimizeBeaming() {
-alert("Optimointi käynnistyi");
+
     const group = getBeamGroup();
 
     if (!group) {
@@ -636,44 +636,51 @@ alert("Optimointi käynnistyi");
     }
 
     const editor = document.getElementById("searchQuery");
-
     const lines = editor.value.split("\n");
 
-    const noteRegex =
-/(\^\^|\^|__|_|=)?[A-Ga-gz][,']*(\d+|\/\d+|\d+\/\d+)?/g;
+    for (let i = 0; i < lines.length; i++) {
 
-    let count = 0;
+        const line = lines[i];
 
-    for (let i=0;i<lines.length;i++) {
-
-        if (/^[A-Z]:/.test(lines[i]))
+        // Ohitetaan metatiedot
+        if (/^[A-Z]:/.test(line))
             continue;
 
-        count = 0;
+        // Käsitellään jokainen tahti erikseen
+        const bars = line.split("|");
 
-        lines[i] = lines[i]
+        for (let b = 0; b < bars.length; b++) {
 
-            .replace(/\s+/g," ")
+            const notes = bars[b]
+                .trim()
+                .split(/\s+/)
+                .filter(n => n.length);
 
-            .replace(noteRegex, note => {
+            if (notes.length === 0)
+                continue;
 
-                count++;
+            let result = "";
 
-                if (count % group === 0)
-                    return note + " ";
+            notes.forEach((note, index) => {
 
-                return note;
+                result += note;
 
-            })
+                if ((index + 1) % group === 0)
+                    result += " ";
 
-            .replace(/\|\s*/g,"| ");
+            });
+
+            bars[b] = result.trim();
+
+        }
+
+        lines[i] = bars.join(" | ");
 
     }
 
     editor.value = lines.join("\n");
-alert(editor.value);
-    processAbc();
 
+    processAbc();
 }
 
 
