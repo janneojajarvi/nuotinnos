@@ -23,7 +23,9 @@
     🖨️ Tulosta / PDF
   </button>
   <button type="button" id="exportAbcBtn">⬇️ Vie ABC</button>
+  <button type="button" id="helpBtn">ℹ️ ABC-ohje</button>
     <div class="button-group">
+
     <button type="button" id="newBtn">🆕 Uusi</button>
 <button type="button" id="saveBtn">💾 Tallenna</button>
 <button type="button" id="openBtn">📂 Avaa</button>
@@ -169,6 +171,18 @@ if ('serviceWorker' in navigator) {
         </div>
 
         <div id="libraryList"></div>
+    </div>
+</div>
+<div id="helpModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>ABC-nuotinnuksen pikaohje</h2>
+            <button id="closeHelpBtn">✕</button>
+        </div>
+
+        <div id="helpContent">
+
+        </div>
     </div>
 </div>
 </body>
