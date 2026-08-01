@@ -12,36 +12,127 @@ const STORAGE_KEY = "abc-notebook";
 const helpExamples = [
 
 {
-    title: "Perustiedot",
-    text: "Yleisimmät ABC-kentät",
+    title: "Nuotit eri oktaaveissa",
+    text: "Sävelnimet neljässä oktaavissa.",
     abc:
-`X:1
-T:Otsikko
-M:4/4
-L:1/4
-K:C`
+`C, D, E, F, G, A, B,
+C D E F G A B
+c d e f g a b
+c' d' e' f' g' a' b'`
 },
 
 {
-    title: "Nuotit",
-    text: "Sävelnimet",
+    title: "Tauot",
+    text: "Eripituisia taukoja.",
     abc:
-`C D E F G A B
-c d e f g a b`
+`z
+z2
+z/2
+z/4`
+},
+
+{
+    title: "Nuottien kestot",
+    text: "Perus- ja eripituiset nuotit.",
+    abc:
+`C
+C2
+C3
+C/2
+C/4`
+},
+
+{
+    title: "Pisteelliset nuotit",
+    text: "Pisteelliset kestot.",
+    abc:
+`C3/2
+C3
+C3/4`
+},
+
+{
+    title: "Tahtiviivat",
+    text: "Yleisimmät tahtiviivat.",
+    abc:
+`|
+||
+|]
+[|`,
 },
 
 {
     title: "Kertaus",
-    text: "Yksinkertainen kertaus",
+    text: "Kertausmerkit.",
     abc:
-`|: C D E F :|`
+`|:
+:|
+|: C D E F :|`
 },
 
 {
     title: "1. ja 2. maali",
-    text: "Ensimmäinen ja toinen lopuke",
+    text: "Ensimmäinen ja toinen lopuke.",
     abc:
 `|: C D |[1 E F :|[2 G A ||`
+},
+
+{
+    title: "Sidoskaari",
+    text: "Sido kaksi saman sävelen nuottia.",
+    abc:
+`C-C`
+},
+
+{
+    title: "Legato",
+    text: "Fraasikaari.",
+    abc:
+`(CDEF)`
+},
+
+{
+    title: "Trioli",
+    text: "Kolme samanarvoista nuottia kahden ajassa.",
+    abc:
+`(3CDE
+(3FGA
+(3cBA`
+},
+
+{
+    title: "Staccato",
+    text: "Staccatopiste.",
+    abc:
+`!.!C D !.!E F`
+},
+
+{
+    title: "Koristeet",
+    text: "Yleisimmät koristeet.",
+    abc:
+`!trill!C
+!turn!D
+!mordent!E
+!fermata!F`
+},
+
+{
+    title: "Soinnut",
+    text: "Sointumerkit nuottien yläpuolella.",
+    abc:
+`"C"C
+"G"G
+"Am"A
+"D7"D`
+},
+
+{
+    title: "Sanat",
+    text: "Sanat nuottien alle.",
+    abc:
+`C D E F
+w: sa-na-t`
 }
 
 ];
