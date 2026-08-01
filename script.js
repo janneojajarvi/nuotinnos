@@ -585,6 +585,97 @@ function getTuneTitle() {
 
 }
 
+function getMeter() {
+
+    const abc = document.getElementById("searchQuery").value;
+
+    const m = abc.match(/^M:(.*)$/m);
+
+    return m ? m[1].trim() : "4/4";
+
+}
+
+
+function getBeamGroup() {
+
+    const meter = getMeter();
+
+    switch (meter) {
+
+        case "2/4":
+            return 2;
+
+        case "3/4":
+            return 2;
+
+        case "4/4":
+            return 2;
+
+        case "6/8":
+            return 3;
+
+        case "9/8":
+            return 3;
+
+        case "12/8":
+            return 3;
+
+        default:
+            return null;
+    }
+
+}
+
+function optimizeBeaming() {
+
+    const group = getBeamGroup();
+
+    if (!group) {
+        alert("Tahtilajia ei vielä tueta.");
+        return;
+    }
+
+    const editor = document.getElementById("searchQuery");
+
+    const lines = editor.value.split("\n");
+
+    const noteRegex =
+/(\^\^|\^|__|_|=)?[A-Ga-gz][,']*(\d+|\/\d+|\d+\/\d+)?/g;
+
+    let count = 0;
+
+    for (let i=0;i<lines.length;i++) {
+
+        if (/^[A-Z]:/.test(lines[i]))
+            continue;
+
+        count = 0;
+
+        lines[i] = lines[i]
+
+            .replace(/\s+/g," ")
+
+            .replace(noteRegex, note => {
+
+                count++;
+
+                if (count % group === 0)
+                    return note + " ";
+
+                return note;
+
+            })
+
+            .replace(/\|\s*/g,"| ");
+
+    }
+
+    editor.value = lines.join("\n");
+
+    processAbc();
+
+}
+
 
 function toggleManualEdit() {
     const textarea = document.getElementById('searchQuery');
@@ -745,6 +836,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .classList.remove("hidden");
 
 });
+
+document.getElementById("beamBtn")
+    .addEventListener("click", optimizeBeaming);
 
 document.getElementById("renameBtn")
     .addEventListener("click", renameTune);
