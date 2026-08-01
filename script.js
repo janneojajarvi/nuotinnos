@@ -642,55 +642,64 @@ function optimizeBeaming() {
     const editor = document.getElementById("searchQuery");
     const lines = editor.value.split("\n");
 
+    // Tunnistaa yhden ABC-nuotin tai tauon
+    const noteRegex =
+        /(\^\^|\^|__|_|=)?[A-Ga-gz][,']*(\d+\/\d+|\/\d+|\d+)?/g;
+
     for (let i = 0; i < lines.length; i++) {
 
-        const line = lines[i];
-
         // Ohitetaan metatiedot
-        if (/^[A-Z]:/.test(line))
+        if (/^[A-Z]:/.test(lines[i]))
             continue;
 
-        // Käsitellään jokainen tahti erikseen
-        const bars = line.split("|");
+        const bars = lines[i].split("|");
 
         for (let b = 0; b < bars.length; b++) {
 
-            const notes = bars[b]
-                .trim()
-                .split(/\s+/)
-                .filter(n => n.length);
+            // Poimitaan kaikki nuotit riippumatta välilyönneistä
+            const notes = [...bars[b].matchAll(noteRegex)]
+                .map(m => m[0]);
 
-            if (notes.length === 0)
-                continue;
+            if (!notes.length) continue;
 
             let result = "";
+            let beamCount = 0;
 
-            for (let j = 0; j < notes.length; j++) {
+            for (const note of notes) {
 
-    result += notes[j];
+                result += note;
 
-    // Neljä peräkkäistä 16-osaa -> ei väliä niiden väliin
-    if (
-        j + 3 < notes.length &&
-        isSixteenth(notes[j]) &&
-        isSixteenth(notes[j + 1]) &&
-        isSixteenth(notes[j + 2]) &&
-        isSixteenth(notes[j + 3])
-    ) {
-        result += "";
-        continue;
-    }
+                // 16-osat
+                if (/\/4$/.test(note)) {
+                    beamCount++;
 
-    if ((j + 1) % group === 0)
-        result += " ";
-}
+                    if (beamCount === 4) {
+                        result += " ";
+                        beamCount = 0;
+                    }
+                    continue;
+                }
+
+                // 8-osat
+                if (/\/2$/.test(note)) {
+                    beamCount++;
+
+                    if (beamCount === group) {
+                        result += " ";
+                        beamCount = 0;
+                    }
+                    continue;
+                }
+
+                // Muut nuotit katkaisevat ryhmän
+                result += " ";
+                beamCount = 0;
+            }
 
             bars[b] = result.trim();
-
         }
 
         lines[i] = bars.join(" | ");
-
     }
 
     editor.value = lines.join("\n");
