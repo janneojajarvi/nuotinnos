@@ -230,6 +230,75 @@ function playSingleNote(noteAbc) {
     }).catch(err => console.warn("Nuotin soitto epäonnistui:", err));
 }
 
+function getCurrentKey() {
+    const abc = document.getElementById("searchQuery").value;
+    const match = abc.match(/^K:\s*([^\s]+)/m);
+    return match ? match[1] : "C";
+}
+
+function getKeyAccidentals(key) {
+
+    const sharpOrder = ["F","C","G","D","A","E","B"];
+    const flatOrder  = ["B","E","A","D","G","C","F"];
+
+    const majorKeys = {
+        C:0, G:1, D:2, A:3, E:4, B:5,
+        "F#":6, "C#":7,
+        F:-1, Bb:-2, Eb:-3, Ab:-4,
+        Db:-5, Gb:-6, Cb:-7
+    };
+
+    // Muutetaan mollit rinnakkaisduureiksi
+    const minorMap = {
+        Am:"C",
+        Em:"G",
+        Bm:"D",
+        "F#m":"A",
+        "C#m":"E",
+        "G#m":"B",
+        "D#m":"F#",
+        "A#m":"C#",
+        Dm:"F",
+        Gm:"Bb",
+        Cm:"Eb",
+        Fm:"Ab",
+        Bbm:"Db",
+        Ebm:"Gb",
+        Abm:"Cb"
+    };
+
+    if (minorMap[key])
+        key = minorMap[key];
+
+    const count = majorKeys[key] ?? 0;
+
+    const acc = {};
+
+    if (count > 0) {
+        for (let i=0;i<count;i++)
+            acc[sharpOrder[i]]="^";
+    }
+
+    if (count < 0) {
+        for (let i=0;i<-count;i++)
+            acc[flatOrder[i]]="_";
+    }
+
+    return acc;
+}
+
+function getPlaybackNote(note) {
+
+    // Käyttäjä valitsi itse etumerkin
+    if (selectedAccidental)
+        return selectedAccidental + note;
+
+    const acc = getKeyAccidentals(getCurrentKey());
+
+    return (acc[note.toUpperCase()] || "") + note;
+}
+
+
 function exportAbc() {
 
     const abc = document.getElementById("searchQuery").value.trim();
@@ -489,7 +558,7 @@ if (printBtn) {
             const note = btn.getAttribute('data-note');
             // --- UUSI OSA: SOITETAAN SÄVEL ---
         // Muodostetaan nuotti etumerkillä, jotta se kuulostaa oikealta
-        const noteToPlay = selectedAccidental + note;
+        const noteToPlay = getPlaybackNote(note);
         playSingleNote(noteToPlay);
         // ---------------------------------
             let dur = selectedDuration;
