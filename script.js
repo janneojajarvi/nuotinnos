@@ -248,25 +248,26 @@ function renameTune() {
     const editor = document.getElementById("searchQuery");
 
     const match = editor.value.match(/^T:(.*)$/m);
-
     const currentTitle = match ? match[1].trim() : "";
 
     const newTitle = prompt("Kappaleen nimi:", currentTitle);
 
     if (newTitle === null) return;
 
-    if (/^T:/m.test(editor.value)) {
+    const title = newTitle.trim();
 
+    if (!title) {
+        alert("Anna kappaleelle nimi.");
+        return;
+    }
+
+    if (/^T:/m.test(editor.value)) {
         editor.value = editor.value.replace(
             /^T:.*$/m,
-            `T:${newTitle}`
+            `T:${title}`
         );
-
     } else {
-
-        editor.value =
-            `T:${newTitle}\n` + editor.value;
-
+        editor.value = `T:${title}\n` + editor.value;
     }
 
     processAbc();
@@ -289,9 +290,14 @@ function getPitchValue(acc, note, oct) {
 
 function saveTune() {
 
-    const name = prompt("Kappaleen nimi:");
+    let name = getTuneTitle();
+
+if (!name) {
+    renameTune();
+    name = getTuneTitle();
 
     if (!name) return;
+}
 
     let tunes = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
@@ -559,6 +565,16 @@ function exportAbc() {
 
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+function getTuneTitle() {
+
+    const editor = document.getElementById("searchQuery");
+
+    const match = editor.value.match(/^T:(.*)$/m);
+
+    return match ? match[1].trim() : "";
+
 }
 
 
