@@ -626,6 +626,46 @@ function getBeamGroup() {
 
 }
 
+function getNoteLength(note, defaultLength = 1) {
+
+    const m = note.match(/(\d+\/\d+|\/\d+|\d+)$/);
+
+    if (!m) return defaultLength;
+
+    const len = m[1];
+
+    if (len.startsWith("/")) {
+        return 1 / parseInt(len.slice(1));
+    }
+
+    if (len.includes("/")) {
+        const [a,b] = len.split("/");
+        return parseInt(a) / parseInt(b);
+    }
+
+    return parseInt(len);
+}
+
+function getBeatLength() {
+
+    switch (getMeter()) {
+
+        case "2/4":
+        case "3/4":
+        case "4/4":
+            return 1;
+
+        case "6/8":
+        case "9/8":
+        case "12/8":
+            return 1.5;
+
+        default:
+            return 1;
+    }
+}
+
+
 function isSixteenth(note) {
     return /\/4\b/.test(note);
 }
@@ -663,38 +703,19 @@ function optimizeBeaming() {
             if (!notes.length) continue;
 
             let result = "";
-            let beamCount = 0;
+let beatPos = 0;
 
-            for (const note of notes) {
+for (const note of notes) {
 
-                result += note;
+    result += note;
 
-                // 16-osat
-                if (/\/4$/.test(note)) {
-                    beamCount++;
+    beatPos += getNoteLength(note);
 
-                    if (beamCount === 4) {
-                        result += " ";
-                        beamCount = 0;
-                    }
-                    continue;
-                }
-
-                // 8-osat
-                if (/\/2$/.test(note)) {
-                    beamCount++;
-
-                    if (beamCount === group) {
-                        result += " ";
-                        beamCount = 0;
-                    }
-                    continue;
-                }
-
-                // Muut nuotit katkaisevat ryhmän
-                result += " ";
-                beamCount = 0;
-            }
+    if (Math.abs(beatPos - getBeatLength()) < 0.0001) {
+        result += " ";
+        beatPos = 0;
+    }
+}
 
             bars[b] = result.trim();
         }
