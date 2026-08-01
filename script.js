@@ -626,6 +626,10 @@ function getBeamGroup() {
 
 }
 
+function isSixteenth(note) {
+    return /\/4\b/.test(note);
+}
+
 function optimizeBeaming() {
 
     const group = getBeamGroup();
@@ -661,14 +665,25 @@ function optimizeBeaming() {
 
             let result = "";
 
-            notes.forEach((note, index) => {
+            for (let j = 0; j < notes.length; j++) {
 
-                result += note;
+    result += notes[j];
 
-                if ((index + 1) % group === 0)
-                    result += " ";
+    // Neljä peräkkäistä 16-osaa -> ei väliä niiden väliin
+    if (
+        j + 3 < notes.length &&
+        isSixteenth(notes[j]) &&
+        isSixteenth(notes[j + 1]) &&
+        isSixteenth(notes[j + 2]) &&
+        isSixteenth(notes[j + 3])
+    ) {
+        result += "";
+        continue;
+    }
 
-            });
+    if ((j + 1) % group === 0)
+        result += " ";
+}
 
             bars[b] = result.trim();
 
