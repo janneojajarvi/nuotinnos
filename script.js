@@ -243,6 +243,34 @@ function renderHelp() {
 
 }
 
+function renameTune() {
+
+    const editor = document.getElementById("searchQuery");
+
+    const match = editor.value.match(/^T:(.*)$/m);
+
+    const currentTitle = match ? match[1].trim() : "";
+
+    const newTitle = prompt("Kappaleen nimi:", currentTitle);
+
+    if (newTitle === null) return;
+
+    if (/^T:/m.test(editor.value)) {
+
+        editor.value = editor.value.replace(
+            /^T:.*$/m,
+            `T:${newTitle}`
+        );
+
+    } else {
+
+        editor.value =
+            `T:${newTitle}\n` + editor.value;
+
+    }
+
+    processAbc();
+}
 
 function getPitchValue(acc, note, oct) {
     const basePitches = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 };
@@ -655,6 +683,8 @@ if (match) {
 
 // --- TAPAHTUMAT ---
 
+
+
 const keySelect = document.getElementById("keySelect");
 
 if (keySelect) {
@@ -691,6 +721,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .classList.remove("hidden");
 
 });
+
+document.getElementById("renameBtn")
+    .addEventListener("click", renameTune);
 
 document.getElementById("closeHelpBtn")
     .addEventListener("click", () => {
