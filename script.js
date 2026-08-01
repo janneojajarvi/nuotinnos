@@ -208,15 +208,8 @@ function newTune() {
 
     const editor = document.getElementById("searchQuery");
 
-    editor.value =
-`X:1
-T:Uusi kappale
-M:4/4
-L:1/4
-K:C
-`;
+    editor.value = getNewTuneTemplate();
 
-    // Siirrä kohdistin tekstin loppuun
     editor.focus();
     editor.selectionStart = editor.selectionEnd = editor.value.length;
 
@@ -304,6 +297,16 @@ function getKeyAccidentals(key) {
 
     return acc;
 }
+
+function getNewTuneTemplate() {
+    return `X:1
+T:Uusi kappale
+M:4/4
+L:1/4
+K:C
+`;
+}
+
 
 function getPlaybackNote(note) {
 
@@ -497,7 +500,13 @@ document.getElementById("newBtn")
     .addEventListener("click", newTune);
 
 document.addEventListener('DOMContentLoaded', () => {
-   processAbc();  
+   const editor = document.getElementById("searchQuery");
+
+    if (!editor.value.trim()) {
+        editor.value = getNewTuneTemplate();
+    }
+
+    
    
    document.getElementById("closeLibraryBtn")
     .addEventListener("click", () => {
@@ -682,5 +691,6 @@ if (clearBtn) {
     });
 }
 
+processAbc();
 
 }); // Tämä sulkee DOMContentLoaded-funktion oikein
