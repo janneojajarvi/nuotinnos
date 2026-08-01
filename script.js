@@ -272,12 +272,13 @@ function renameTune() {
 
     processAbc();
 
-const match = editor.value.match(/^K:.*$/m);
+const keyMatch = editor.value.match(/^K:.*$/m);
 
-if (match) {
-    const pos = match.index + match[0].length + 1; // seuraavan rivin alku
+if (keyMatch) {
+    const pos = keyMatch.index + keyMatch[0].length + 1;
     editor.focus();
     editor.selectionStart = editor.selectionEnd = pos;
+}
 }
 
 function getPitchValue(acc, note, oct) {
