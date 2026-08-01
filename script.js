@@ -184,6 +184,24 @@ function renderLibrary() {
     });
 }
 
+function setKeySignature(newKey) {
+
+    const editor = document.getElementById("searchQuery");
+
+    if (/^K:/m.test(editor.value)) {
+        editor.value = editor.value.replace(
+            /^K:.*$/m,
+            `K:${newKey}`
+        );
+    } else {
+        editor.value += `\nK:${newKey}\n`;
+    }
+
+    processAbc();
+}
+
+
+
 function newTune() {
 
     if (!confirm("Tyhjennetäänkö nykyinen kappale?")) return;
@@ -411,11 +429,21 @@ function initPlayer() {
 
 
 function processAbc() {
+	
+	
     const editor = document.getElementById("searchQuery");
     const clefSelect = document.getElementById("clefSelect");
     const selectedClef = clefSelect ? clefSelect.value : "treble";
 
     currentAbc = editor.value;
+    
+    const match = currentAbc.match(/^K:\s*([^\s]+)/m);
+
+if (match) {
+    const keySelect = document.getElementById("keySelect");
+    if (keySelect)
+        keySelect.value = match[1];
+}
 
     // Käytetään kopiota editorin tekstistä
     let abc = currentAbc;
@@ -447,6 +475,14 @@ function processAbc() {
 
 
 // --- TAPAHTUMAT ---
+
+const keySelect = document.getElementById("keySelect");
+
+if (keySelect) {
+    keySelect.addEventListener("change", () => {
+        setKeySignature(keySelect.value);
+    });
+}
 
 document.getElementById("exportAbcBtn")
     .addEventListener("click", exportAbc);
