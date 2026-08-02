@@ -1145,8 +1145,13 @@ document.querySelectorAll('.bar-btn').forEach(btn => {
                 abcEditor.selectionStart = abcEditor.selectionEnd = start;
             }
 
-            processAbc(); 
-            abcEditor.focus();
+            const cursorPos = abcEditor.selectionStart;
+
+processAbc();
+
+abcEditor.focus();
+const pos = Math.min(cursorPos, abcEditor.value.length);
+abcEditor.selectionStart = abcEditor.selectionEnd = pos;
         });
     }
     
