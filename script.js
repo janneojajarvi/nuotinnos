@@ -707,6 +707,7 @@ function optimizeBeaming() {
     }
 
     const editor = document.getElementById("searchQuery");
+const oldPos = editor.selectionStart;
     const lines = editor.value.split("\n");
 
     // Tunnistaa yhden ABC-nuotin tai tauon
@@ -752,7 +753,12 @@ for (const note of notes) {
 
     editor.value = lines.join("\n");
 
-    processAbc();
+processAbc();
+
+// Palautetaan kohdistin mahdollisimman lähelle vanhaa paikkaa
+editor.focus();
+const pos = Math.min(oldPos, editor.value.length);
+editor.selectionStart = editor.selectionEnd = pos;
 }
 
 
