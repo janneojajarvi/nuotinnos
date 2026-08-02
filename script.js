@@ -904,14 +904,17 @@ if (match) {
         return `K:${key} clef=${selectedClef}`;
     });
     
-alert(abc);  
+alert("Ennen renderAbc");
 
     visualObj = ABCJS.renderAbc("paper", abc, {
         responsive: "resize",
         paddingbottom: 35
     })[0];
+    
+    alert("RenderAbc valmis");
 
     initPlayer();
+    alert("initPlayer valmis");
 }
 
 
