@@ -418,6 +418,26 @@ function setKeySignature(newKey) {
     processAbc();
 }
 
+function setMeter(newMeter) {
+
+    const editor = document.getElementById("searchQuery");
+
+    if (/^M:.*$/m.test(editor.value)) {
+
+        editor.value = editor.value.replace(
+            /^M:.*$/m,
+            `M:${newMeter}`
+        );
+
+    } else {
+
+        editor.value =
+            `M:${newMeter}\n` + editor.value;
+    }
+
+    processAbc();
+}
+
 
 
 function newTune() {
@@ -842,6 +862,16 @@ function processAbc() {
     const clefSelect = document.getElementById("clefSelect");
     const selectedClef = clefSelect ? clefSelect.value : "treble";
 
+const meterMatch = currentAbc.match(/^M:\s*([^\s]+)/m);
+
+if (meterMatch) {
+    const meterSelect = document.getElementById("meterSelect");
+
+    if (meterSelect) {
+        meterSelect.value = meterMatch[1];
+    }
+}
+
     currentAbc = editor.value;
     
     const match = currentAbc.match(/^K:\s*([^\s]+)/m);
@@ -851,6 +881,8 @@ if (match) {
     if (keySelect)
         keySelect.value = match[1];
 }
+
+
 
     // Käytetään kopiota editorin tekstistä
     let abc = currentAbc;
@@ -893,6 +925,8 @@ if (keySelect) {
     });
 }
 
+
+
 document.getElementById("exportAbcBtn")
     .addEventListener("click", exportAbc);
 
@@ -911,6 +945,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!editor.value.trim()) {
         editor.value = getNewTuneTemplate();
     }
+    
+    const meterSelect = document.getElementById("meterSelect");
+
+if (meterSelect) {
+    meterSelect.addEventListener("change", () => {
+        setMeter(meterSelect.value);
+    });
+}
 
     document.getElementById("helpBtn")
 .addEventListener("click", () => {
