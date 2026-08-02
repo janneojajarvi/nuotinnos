@@ -859,6 +859,7 @@ function processAbc() {
 	
 	
     const editor = document.getElementById("searchQuery");
+    currentAbc = editor.value;
     const clefSelect = document.getElementById("clefSelect");
     const selectedClef = clefSelect ? clefSelect.value : "treble";
 
@@ -872,7 +873,7 @@ if (meterMatch) {
     }
 }
 
-    currentAbc = editor.value;
+    
     
     const match = currentAbc.match(/^K:\s*([^\s]+)/m);
 
@@ -902,6 +903,8 @@ if (match) {
         key = key.replace(/\s+clef=\S+/g, "").trim();
         return `K:${key} clef=${selectedClef}`;
     });
+    
+alert(abc);  
 
     visualObj = ABCJS.renderAbc("paper", abc, {
         responsive: "resize",
